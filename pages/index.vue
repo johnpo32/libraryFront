@@ -1,5 +1,6 @@
 <template>
   <NavComponent />
+
   <div class="books-container">
     <!-- Buscador centrado -->
     <div class="search-section">
@@ -8,7 +9,16 @@
         <input v-model="nombreLibro" type="text" placeholder="Escribe el nombre de un Libro para continuar"
           class="search-input" />
       </div>
-      <button @click="handleSubmit" class="boton-generico">Buscar</button>
+      <!-- Boton de buscar -->
+      <button @click="handleSubmit" class="boton-generico">
+        <span v-if="loading">
+          <span class="spinner-border spinner-border-sm" role="status"></span>
+          Buscando...
+        </span>
+        <span v-else>
+          Buscar
+        </span>
+      </button>
 
     </div>
 
@@ -26,8 +36,8 @@
     <div v-if="booksStore.searchResults.length > 0" class="results-section">
       <h2>Resultados de búsqueda ({{ booksStore.searchResults.length }})</h2>
       <div class="books-grid">
-        <div v-for="book in booksStore.searchResults" :key="book.title" class="book-card">
-          <NuxtLink :to="`/libros/${book.title}`">
+        <div v-for="book in booksStore.searchResults" :key="book.key" class="book-card">
+          <NuxtLink :to="`/libros/${book.key}`">
             <div class="book-cover">
               <img :src="book.cover" :alt="book.title" />
             </div>
@@ -55,14 +65,19 @@ const booksStore = useBooksStore()
 const nombreLibro = ref('')
 const busquedasRecientes = ref([])
 const toast = useToast()
+const loading = ref(false)
 
 const { $api } = useNuxtApp()
 
 const handleSubmit = async () => {
-  try {
+  try {   
+
     if (nombreLibro.value.trim() === '') {
       return toast.warning({ title: 'Warning!', message: 'Digite el nombre del libro' })
     }
+
+    loading.value = true
+
     const data = await $api(`/api/books/search?query=${nombreLibro.value}`, {
       method: "GET",
     })
@@ -75,6 +90,8 @@ const handleSubmit = async () => {
 
   } catch (error) {
     toast.error({ title: 'Error!', message: error })
+  } finally {
+    loading.value = false
   }
 }
 

@@ -8,8 +8,8 @@ export const useBooksStore = defineStore('books', {
     setResults(results: any[]) {
       this.searchResults = results
     },
-    obtenerPortitulo(slug: string) {
-      return this.searchResults.find(b => this.normalizar(b.title) === this.normalizar(slug))
+    obtenerKey(slug: string) {
+      return this.searchResults.find(b => this.normalizar(b.key) === this.normalizar(slug))
     },
     normalizar(title: string) {
       return title

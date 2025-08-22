@@ -89,6 +89,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 const libros = ref([])
 const librosFiltrados = ref([])
 const searchTerm = ref('')

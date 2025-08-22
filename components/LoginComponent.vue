@@ -1,5 +1,12 @@
 <template>
-  <div class="login-container">
+  <!-- Loading -->
+  <div v-if="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+  <!-- resto del contenido -->
+  <div v-else class="login-container">
     <div class="login-card">
       <h1 class="login-title">{{ isLoginMode ? 'Iniciar Sesión' : 'Registrarse' }}</h1>
 
@@ -36,6 +43,7 @@ const username = ref('')
 const password = ref('')
 const isLoginMode = ref(true)
 const message = ref('')
+const loading = ref(false)
 const { $register } = useNuxtApp()
 
 import { useAuthStore } from '~/stores/auth'
@@ -55,13 +63,20 @@ const handleSubmit = () => {
 }
 
 const loginUser = async () => {
+  loading.value = true
   const consulta = await auth.login(username.value, password.value)
 
   if (consulta.success) {
     toast.success({ title: 'Success!', message: consulta.message })
-    navigateTo('/')
+
+    setTimeout(() => {
+      loading.value = false
+      navigateTo('/')
+    }, 1500);
+    
   } else {
     toast.error({ title: 'Error!', message: consulta.message })
+    loading.value = false
   }
 }
 

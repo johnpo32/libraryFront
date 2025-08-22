@@ -28,13 +28,12 @@
 }
 
 .input-group {
-  margin: 0 2em 1.2rem 2em;
+  margin: 2em auto;
 
   input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: $border-radius;
+    border: 1px solid #ddd;   
     font-size: 1rem;
     transition: border-color 0.3s;
 

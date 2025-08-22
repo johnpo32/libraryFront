@@ -1,6 +1,6 @@
 <template>
   <NavComponent />
-  <div v-if="book" class="contenedor-generico">
+  <div v-if="book" class="login-container">
     <div class="login-card">
       <!-- Información del libro -->
       <div>
@@ -37,7 +37,13 @@
 
         <!-- Botón de enviar -->
         <button class="boton-generico" @click="submitReview">
-          Enviar reseña
+          <span v-if="loading">
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+            Guardando...
+          </span>
+          <span v-else>
+            Guardar
+          </span>
         </button>
       </div>
     </div>
@@ -58,9 +64,10 @@ const booksStore = useBooksStore();
 const { convertir } = useImagenToBase64();
 const { $api } = useNuxtApp()
 const toast = useToast()
+const loading = ref(false)
 
 // Obtenemos el libro según el slug (title normalizado)
-const book = computed(() => booksStore.obtenerPortitulo(route.params.id));
+const book = computed(() => booksStore.obtenerKey(route.params.id));
 
 // Estado para la reseña y calificación
 const reviewText = ref('');
@@ -75,6 +82,8 @@ const setRating = (stars) => {
 const submitReview = async () => {
 
   try {
+    loading.value = true
+
     // Transformo documento
     const resultadoImagen = await convertir(book.value.cover);
     console.log('Base64:', resultadoImagen);
@@ -84,6 +93,7 @@ const submitReview = async () => {
       body: JSON.stringify({
         title: book.value.title,
         author: book.value.author,
+        key: book.value.key,
         publishYear: book.value.publishYear,
         coverImage: resultadoImagen,
         rating: rating.value,
@@ -94,7 +104,9 @@ const submitReview = async () => {
     toast.success({ title: 'Success!', message: 'Se guardaron los datos' })
 
   } catch (error) {
-    toast.error({ title: 'Error!', message: error })
+    toast.error({ title: 'Warning!', message: 'Revisa en tu biblioteca, es posible que ya exista el libro' })
+  } finally {
+    loading.value = false
   }
 
 };
