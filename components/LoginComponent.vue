@@ -38,22 +38,27 @@
 </template>
 
 <script setup>
-const toast = useToast()
+/* Store */
+import { useAuthStore } from '~/stores/auth'
+
+const message = ref('')
 const username = ref('')
 const password = ref('')
-const isLoginMode = ref(true)
-const message = ref('')
 const loading = ref(false)
+const isLoginMode = ref(true)
 const { $register } = useNuxtApp()
 
-import { useAuthStore } from '~/stores/auth'
+/* Plugins */
 const auth = useAuthStore()
+const { $swal } = useNuxtApp();
 
+/* puedo inciar sesion o registrar */
 const toggleMode = () => {
   isLoginMode.value = !isLoginMode.value
   message.value = ''
 }
 
+/* Aqui manejo el evento de registrar o login */
 const handleSubmit = () => {
   if (isLoginMode.value) {
     loginUser()
@@ -62,24 +67,24 @@ const handleSubmit = () => {
   }
 }
 
+/* login */
 const loginUser = async () => {
   loading.value = true
   const consulta = await auth.login(username.value, password.value)
 
   if (consulta.success) {
-    toast.success({ title: 'Success!', message: consulta.message })
+    notificar("success", consulta.message)
 
-    setTimeout(() => {
-      loading.value = false
-      navigateTo('/')
-    }, 1500);
-    
+    loading.value = false
+    navigateTo('/')
+
   } else {
-    toast.error({ title: 'Error!', message: consulta.message })
+    notificar("error", consulta.message)
     loading.value = false
   }
 }
 
+/* registrar */
 const registrarUsuario = async () => {
   try {
     const data = await $register(`/api/users/register`, {
@@ -90,12 +95,24 @@ const registrarUsuario = async () => {
       })
     })
 
-    toast.success({ title: 'Success!', message: 'Se creo el usuario ' + username })
-    isLoginMode.value = true
     password.value = ''
+    isLoginMode.value = true
+    notificar("success", 'Se creo el usuario ' + username.value)
+
   } catch (error) {
-    toast.error({ title: 'Error!', message: error })
+    notificar("error", error)
   }
+}
+
+/* Abstraccion de notificacion */
+const notificar = (tipo, text) => {
+  $swal.fire({
+    position: "top-end",
+    icon: tipo,
+    text: text,
+    showConfirmButton: false,
+    timer: 1500
+  });
 }
 </script>
 

@@ -9,12 +9,20 @@
 <script setup>
 import { useAuthStore } from '~/stores/auth'
 
+const { $swal } = useNuxtApp();
+
 const auth = useAuthStore()
 const toast = useToast()
 const router = useRouter()
 
 const salir = () => {
-  toast.info({ title: 'Info', message: 'Adiosito!!' })
+  $swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: "Hasta pronto",
+  showConfirmButton: false,
+  timer: 1500
+});
   auth.logout()
 }
 

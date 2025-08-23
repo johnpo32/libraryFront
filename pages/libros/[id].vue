@@ -55,6 +55,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { useRoute } from "vue-router";
 import { useBooksStore } from "~/stores/books";
 import { ref, computed } from 'vue';

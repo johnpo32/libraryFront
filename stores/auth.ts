@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import type { AuthResponse } from '~/types/auth';
+import type { User } from '~/types/auth';
 
 const config = useRuntimeConfig();
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as null | { id: string; name: string },
+    user: null as null | User,
     token: null as string | null,
     loading: false,
     error: null as string | null
@@ -22,12 +23,16 @@ export const useAuthStore = defineStore('auth', {
 
         if (!data.value) throw new Error('Respuesta inválida del servidor')
 
+        console.log('obtengo mi token ' + data.value.token)
+
         this.token = data.value.token
         this.user = data.value.user
 
         // Guardar en localStorage
-        localStorage.setItem('auth_token', this.token || '')
-        localStorage.setItem('auth_user', JSON.stringify(this.user))
+        if (process.client) {
+          localStorage.setItem('auth_token', this.token || '')
+          localStorage.setItem('auth_user', JSON.stringify(this.user))
+        }
 
         return { success: true, message: 'Login exitoso' }
 

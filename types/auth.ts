@@ -6,5 +6,11 @@ export interface Login {
 export interface AuthResponse {
     success: boolean
     token: string | null
-    user: null | { id: string; name: string }
+    user: User
+}
+
+export interface User {
+  id: string
+  username: string
+  role: string
 }

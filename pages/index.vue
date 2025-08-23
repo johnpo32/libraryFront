@@ -10,7 +10,7 @@
           class="search-input" />
       </div>
       <!-- Boton de buscar -->
-      <button @click="handleSubmit" class="boton-generico">
+      <button @click="buscarLibro" class="boton-generico">
         <span v-if="loading">
           <span class="spinner-border spinner-border-sm" role="status"></span>
           Buscando...
@@ -64,48 +64,75 @@ import { useBooksStore } from '~/stores/books'
 const booksStore = useBooksStore()
 const nombreLibro = ref('')
 const busquedasRecientes = ref([])
-const toast = useToast()
 const loading = ref(false)
 
+const { $swal } = useNuxtApp();
 const { $api } = useNuxtApp()
 
-const handleSubmit = async () => {
-  try {   
-
-    if (nombreLibro.value.trim() === '') {
-      return toast.warning({ title: 'Warning!', message: 'Digite el nombre del libro' })
-    }
-
-    loading.value = true
-
-    const data = await $api(`/api/books/search?query=${nombreLibro.value}`, {
-      method: "GET",
-    })
-
-    if (data && data.length > 0) {
-      booksStore.setResults(data) //Guardo en store
-    } else {
-      booksStore.setResults([])
-    }
-
-  } catch (error) {
-    toast.error({ title: 'Error!', message: error })
-  } finally {
-    loading.value = false
-  }
-}
-
+/* Cargo las busquedas recientes */
 onMounted(async () => {
+  librosRecientes()
+})
+
+const librosRecientes = async () => {
   try {
     const data = await $api(`/api/books/last-search`, {
       method: "GET",
     })
 
-    busquedasRecientes.value = data
+    if (Array.isArray(data) && data.length > 0) {
+      busquedasRecientes.value = data
+    } else {
+      busquedasRecientes.value = []
+    }
+    
   } catch (error) {
-    toast.error({ title: 'Error!', message: error })
+    notificar("error", error)
   }
-})
+}
+
+const buscarLibro = async () => {
+  try {
+
+    const searchTerm = nombreLibro.value.trim()
+    if (!searchTerm) {
+      notificar("warning", "Por favor, digite el nombre del libro")
+      return
+    }
+
+    loading.value = true
+
+    const searchUrl = `/api/books/search?query=${encodeURIComponent(searchTerm)}`
+
+    const data = await $api(searchUrl, { method: "GET" })
+
+    if (Array.isArray(data) && data.length > 0) {
+      booksStore.setResults(data)
+      librosRecientes()
+    } else {
+      booksStore.setResults([])
+      notificar("warning", "No se encontraron libros con ese nombre")
+    }
+
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message || 'Error en la búsqueda'
+    notificar("error", errorMessage)
+
+    booksStore.setResults([])
+  } finally {
+    loading.value = false
+  }
+}
+
+const notificar = (tipo, text) => {
+  $swal.fire({
+    position: "top-end",
+    icon: tipo,
+    text: text,
+    showConfirmButton: false,
+    timer: 1500
+  });
+}
 
 </script>
 
