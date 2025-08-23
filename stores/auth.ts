@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
           body: { username, password }
         })
 
-        if (!data.value) throw new Error('Respuesta inválida del servidor')
+        if (!data.value || !data.value.token) throw new Error('Respuesta inválida del servidor')
 
         console.log('obtengo mi token ' + data.value.token)
 
