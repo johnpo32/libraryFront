@@ -1,9 +1,25 @@
 <template>
-  <div>
-    <button class="botonInicio" @click="inicio">Inicio</button>
-    <button class="botonBiblioteca" @click="irABiblioteca">Biblioteca</button>
-    <button class="botonSalir" @click="salir">Salir</button>
-  </div>
+  <header class="sticky-top bg-white">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light">
+
+        <!-- Menú colapsable -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+          <!-- Acciones de usuario -->
+          <div class="d-flex gap-2">
+            <NuxtLink to="/" class="botonInicio btn btn-outline-primary">
+              Inicio
+            </NuxtLink>
+            <div class="d-flex gap-2">
+              <NuxtLink to="/biblioteca" class="botonBiblioteca btn btn-outline-primary">Biblioteca</NuxtLink>
+              <button class="botonSalir btn btn-outline-secondary" @click="salir">Salir</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <script setup>
@@ -17,12 +33,12 @@ const router = useRouter()
 
 const salir = () => {
   $swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Hasta pronto",
-  showConfirmButton: false,
-  timer: 1500
-});
+    position: "top-end",
+    icon: "success",
+    title: "Hasta pronto",
+    showConfirmButton: false,
+    timer: 1500
+  });
   auth.logout()
 }
 
@@ -36,60 +52,18 @@ const inicio = () => {
 </script>
 
 <style lang="scss">
-.botonInicio{
-  padding: .5em .8em;
+.botonInicio {
   position: fixed;
-  top: 20px;
   right: 220px;
-  color: $colorSecundario !important;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid $colorSecundario;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: $colorSecundario;
-    color: white !important;
-  }
 }
 
 .botonSalir {
-  padding: .5em .8em;
   position: fixed;
-  top: 20px;
   right: 20px;
-  color: $colorSecundario !important;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid $colorSecundario;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: $colorSecundario;
-    color: white !important;
-  }
 }
 
 .botonBiblioteca {
-  padding: .5em .8em;
   position: fixed;
-  top: 20px;
   right: 100px;
-  color: $principalcolor !important;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid $principalcolor;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: $principalcolor;
-    color: white !important;
-  }
 }
 </style>
