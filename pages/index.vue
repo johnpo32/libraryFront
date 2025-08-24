@@ -36,13 +36,10 @@
     <div v-if="booksStore.searchResults.length > 0" class="results-section">
       <h2>Resultados de búsqueda ({{ booksStore.searchResults.length }})</h2>
       <div class="books-grid">
-        <div v-for="book in booksStore.searchResults" :key="book.key" class="book-card">
-          <NuxtLink :to="`/libros/${book.key}`">
-            <div class="book-cover">
-              <img :src="book.cover" :alt="book.title" />
-            </div>
-            <h3 class="book-title">{{ book.title }}</h3>
-          </NuxtLink>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <div v-for="book in booksStore.searchResults" :key="book.key" class="col book-card">
+            <CardComponent :libro="book" />
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +82,7 @@ const librosRecientes = async () => {
     } else {
       busquedasRecientes.value = []
     }
-    
+
   } catch (error) {
     notificar("error", error)
   }

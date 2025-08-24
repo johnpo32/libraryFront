@@ -52,14 +52,5 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('auth_user')
       navigateTo('/login')
     },
-
-    restoreSession() {
-      const token = localStorage.getItem('auth_token')
-      const user = localStorage.getItem('auth_user')
-      if (token && user) {
-        this.token = token
-        this.user = JSON.parse(user)
-      }
-    }
   }
 })

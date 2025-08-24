@@ -1,8 +1,5 @@
 <template>
-  <header class="sticky-top bg-white">
-    <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light">
-
+  <nav class="navbar navbar-expand-lg navbar-light">
         <!-- Menú colapsable -->
         <div class="collapse navbar-collapse" id="navbarContent">
 
@@ -18,8 +15,6 @@
           </div>
         </div>
       </nav>
-    </div>
-  </header>
 </template>
 
 <script setup>

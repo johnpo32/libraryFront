@@ -2,9 +2,10 @@
   <NavComponent />
   <div v-if="book" class="login-container">
     <div class="login-card">
+
       <!-- Información del libro -->
       <div>
-        <img :src="book.cover" :alt="book.title" />
+        <img :src="book.cover || book.coverImage || '/images/sin-imagen.png'" />
         <div>
           <h1>{{ book.title }}</h1>
           <p><strong>Autor:</strong> {{ book.author }}</p>
@@ -20,7 +21,7 @@
         <div class="rating">
           <p>Califica este libro:</p>
           <div class="stars">
-            <span v-for="star in 5" :key="star" class="star" :class="{ 'filled': star <= rating }"
+            <span v-for="star in 5" :key="star" class="star" :class="{ 'filled': star <= book.rating }"
               @click="setRating(star)">
               ★
             </span>
@@ -30,13 +31,37 @@
         <!-- Textarea para reseña -->
         <div class="review-form">
           <label for="review">Tu reseña (máximo 500 caracteres):</label>
-          <textarea id="review" v-model="reviewText" placeholder="Comparte tu opinión sobre este libro..."
+          <textarea id="review" v-model="book.review" placeholder="Comparte tu opinión sobre este libro..."
             maxlength="500" rows="6"></textarea>
-          <div class="char-counter">{{ reviewText.length }}/500 caracteres</div>
+          <div class="char-counter">{{ book.review ? book.review.length : 0 }}/500 caracteres</div>
         </div>
 
-        <!-- Botón de enviar -->
-        <button class="boton-generico" @click="submitReview">
+        <div v-if="book.coverImage" class="btn-acciones">
+          <!-- Botón de Actualizar -->
+          <button class="btn btn-primary btn-sm" @click="guardarEdicion">
+            <span v-if="loading">
+              <span class="spinner-border spinner-border-sm" role="status"></span>
+              Actualizando...
+            </span>
+            <span v-else>
+              Actualizar
+            </span>
+          </button>
+
+          <!-- Eliminar -->
+          <button class="btn btn-outline-danger btn-sm" @click="eliminarLibro">
+            <span v-if="loading">
+              <span class="spinner-border spinner-border-sm" role="status"></span>
+              Eliminando...
+            </span>
+            <span v-else>
+              Eliminar
+            </span>
+          </button>
+        </div>
+
+        <!-- Boton de guardar -->
+        <button v-else class="boton-generico" @click="submitReview">
           <span v-if="loading">
             <span class="spinner-border spinner-border-sm" role="status"></span>
             Guardando...
@@ -61,30 +86,34 @@ definePageMeta({
 
 import { useRoute } from "vue-router";
 import { useBooksStore } from "~/stores/books";
+import { useMyBibliotecaStore } from "~/stores/biblioteca";
 import { ref, computed } from 'vue';
 
 const route = useRoute();
 const booksStore = useBooksStore();
+const bibliotecaStore = useMyBibliotecaStore();
 const { convertir } = useImagenToBase64();
 const { $api } = useNuxtApp()
+const { $swal } = useNuxtApp();
+
 const toast = useToast()
 const loading = ref(false)
 
-// Obtenemos el libro según el slug (title normalizado)
-const book = computed(() => booksStore.obtenerKey(route.params.id));
-
-// Estado para la reseña y calificación
-const reviewText = ref('');
-const rating = ref(null);
+// Obtenemos el libro según el store
+const book = computed(() => {
+  return (
+    bibliotecaStore.obtenerKey(route.params.id) ||
+    booksStore.obtenerKey(route.params.id)
+  )
+})
 
 // Establecer calificación
 const setRating = (stars) => {
-  rating.value = stars;
+  book.value.rating = stars;
 };
 
 // Enviar reseña
 const submitReview = async () => {
-
   try {
     loading.value = true
 
@@ -100,20 +129,69 @@ const submitReview = async () => {
         key: book.value.key,
         publishYear: book.value.publishYear,
         coverImage: resultadoImagen,
-        rating: rating.value,
-        review: reviewText.value
+        rating: book.value.rating,
+        review: book.value.review
       })
     })
 
-    toast.success({ title: 'Success!', message: 'Se guardaron los datos' })
+    $swal.fire("", "Se guardaron los datos", "success")
+    navigateTo('/biblioteca')
 
   } catch (error) {
     toast.error({ title: 'Warning!', message: 'Revisa en tu biblioteca, es posible que ya exista el libro' })
   } finally {
     loading.value = false
   }
-
 };
+
+/* Actualizacion */
+const guardarEdicion = async () => {
+  try {
+
+    await $api(`/api/books/my-library/${book.value._id}`, {
+      method: 'PUT',
+      body: {
+        review: book.value.review,
+        rating: book.value.rating
+      }
+    })
+    $swal.fire("", "Se actualizó el libro", "success")
+    navigateTo('/biblioteca')
+
+  } catch (error) {
+    $swal.fire("", "Error editando libro: " + error, "error")
+    console.error('Error editando libro:', error)
+  }
+}
+
+/* Eliminar */
+const eliminarLibro = async (libro) => {
+  try {
+
+    const result = $swal.fire({
+      title: "¿Estás seguro de eliminar este libro?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!(await result).isConfirmed) return;
+
+    await $api(`/api/books/my-library/${book.value._id}`, {
+      method: 'DELETE'
+    })
+
+    $swal.fire("", "Se eliminó el libro", "success")
+    navigateTo('/biblioteca')
+
+  } catch (error) {
+    $swal.fire("", "Error eliminando libro: " + error, "error")
+
+  }
+}
+
 </script>
 
 <style scoped>
@@ -195,5 +273,11 @@ const submitReview = async () => {
   font-size: 0.85rem;
   color: #666;
   margin-top: 0.25rem;
+}
+
+.btn-acciones {
+  gap: 2;
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
