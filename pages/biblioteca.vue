@@ -28,7 +28,7 @@
     </div>
 
     <div v-else class="grilla">
-      <div v-for="book in bookBiblioteca.biblioteca" :key="book.key" >
+      <div v-for="book in bookBiblioteca.biblioteca" :key="book.key">
         <CardComponent :libro="book" />
       </div>
     </div>
@@ -86,7 +86,7 @@ const filtrarLibros = async () => {
       method: "GET",
       params: cleanFilters
     })
-    
+
     if (Array.isArray(data) && data.length > 0) {
       bookBiblioteca.setBiblioteca(data)
     } else {
@@ -118,34 +118,6 @@ watch(
 
 </script>
 <style>
-.modal-edicion {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-contenido {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 500px;
-}
-
-.modal-contenido h3 {
-  margin: 0 0 1.5rem 0;
-  color: #333;
-  font-size: 1.5rem;
-}
-
 .acciones {
   padding: 0.5em;
 }
