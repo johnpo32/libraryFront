@@ -7,6 +7,7 @@
         <img 
           :src="libro.cover || libro.coverImage || '/images/sin-imagen.png'" 
           :alt="libro.title" 
+          :title="libro.cover || libro.coverImage"
           loading="lazy" 
         />
       </NuxtLink>
