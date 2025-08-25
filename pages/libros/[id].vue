@@ -1,11 +1,12 @@
 <template>
   <NavComponent />
   <div v-if="book" class="login-container">
-    <div class="login-card">
+    <div class="card-section">
 
       <!-- Información del libro -->
-      <div>
+      <div class="book-layout">
         <img :src="book.cover || book.coverImage || '/images/sin-imagen.png'" />
+
         <div>
           <h1>{{ book.title }}</h1>
           <p><strong>Autor:</strong> {{ book.author }}</p>
@@ -38,9 +39,8 @@
 
         <div v-if="book.coverImage" class="btn-acciones">
           <!-- Botón de Actualizar -->
-          <button class="btn btn-primary btn-sm" @click="guardarEdicion">
+          <button class="boton-generico boton-local" @click="guardarEdicion">
             <span v-if="loading">
-              <span class="spinner-border spinner-border-sm" role="status"></span>
               Actualizando...
             </span>
             <span v-else>
@@ -49,9 +49,8 @@
           </button>
 
           <!-- Eliminar -->
-          <button class="btn btn-outline-danger btn-sm" @click="eliminarLibro">
+          <button class="btn-ver-detalle boton-local" @click="eliminarLibro">
             <span v-if="loading">
-              <span class="spinner-border spinner-border-sm" role="status"></span>
               Eliminando...
             </span>
             <span v-else>
@@ -61,9 +60,8 @@
         </div>
 
         <!-- Boton de guardar -->
-        <button v-else class="boton-generico" @click="submitReview">
+        <button v-else class="boton-generico boton-local" @click="submitReview">
           <span v-if="loading">
-            <span class="spinner-border spinner-border-sm" role="status"></span>
             Guardando...
           </span>
           <span v-else>
@@ -194,29 +192,44 @@ const eliminarLibro = async (libro) => {
 
 </script>
 
-<style scoped>
-.review-section {
-  flex: 1;
-  background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+<style scoped lang="scss">
+.book-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
-.review-section h2 {
-  margin-top: 0;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.5rem;
+.card-section {
+  background: white;
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 50%;
+}
+
+.review-section {
+  flex: 1;
+  background: $background-color;
+  padding: $spacing;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 4px $color-shadow;
+
+  h2 {
+    margin-top: 0;
+    color: $text-color;
+    border-bottom: 1px solid darken($background-color, 5%);
+    padding-bottom: 0.5rem;
+  }
 }
 
 .rating {
   margin-bottom: 1.5rem;
-}
 
-.rating p {
-  margin: 0.5rem 0;
-  color: #555;
+  p {
+    margin: 0.5rem 0;
+    color: #555;
+  }
 }
 
 .stars {
@@ -230,42 +243,43 @@ const eliminarLibro = async (libro) => {
   color: #ddd;
   cursor: pointer;
   transition: color 0.2s;
-}
 
-.star.filled {
-  color: #ffc107;
-}
+  &.filled {
+    color: #ffc107;
+  }
 
-.star:hover {
-  color: #ffc107;
+  &.hover {
+    color: #ffc107;
+  }
+
 }
 
 .review-form {
   margin-bottom: 1.5rem;
-}
 
-.review-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #555;
-  font-weight: 500;
-}
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+  }
 
-.review-form textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 1rem;
-  resize: vertical;
-  box-sizing: border-box;
-}
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    box-sizing: border-box;
 
-.review-form textarea:focus {
-  outline: none;
-  border-color: #4361ee;
-  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    &.focus {
+      outline: none;
+      border-color: #4361ee;
+      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+  }
 }
 
 .char-counter {
@@ -280,4 +294,10 @@ const eliminarLibro = async (libro) => {
   display: flex;
   gap: 0.5rem;
 }
+
+.boton-local {
+  padding: .5em;
+  width: auto;
+}
+
 </style>

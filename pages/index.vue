@@ -12,7 +12,7 @@
       <!-- Boton de buscar -->
       <button @click="buscarLibro" class="boton-generico">
         <span v-if="loading">
-          <span class="spinner-border spinner-border-sm" role="status"></span>
+          <span></span>
           Buscando...
         </span>
         <span v-else>
@@ -35,12 +35,12 @@
     <!-- Resultados de búsqueda -->
     <div v-if="booksStore.searchResults.length > 0" class="results-section">
       <h2>Resultados de búsqueda ({{ booksStore.searchResults.length }})</h2>
-      <div class="books-grid">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          <div v-for="book in booksStore.searchResults" :key="book.key" class="col book-card">
-            <CardComponent :libro="book" />
-          </div>
+
+      <div class="grilla">
+        <div v-for="book in booksStore.searchResults" :key="book.key">
+          <CardComponent :libro="book" />
         </div>
+
       </div>
     </div>
 

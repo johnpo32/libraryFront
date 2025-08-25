@@ -32,7 +32,7 @@
 
   input {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.75rem 0;
     border: 1px solid #ddd;   
     font-size: 1rem;
     transition: border-color 0.3s;
@@ -160,5 +160,33 @@
     color: $text-color;
     margin-bottom: 2rem;
     text-align: center;
+  }
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.btn-ver-detalle {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0;
+  background: transparent;
+  color: $principalcolor;
+  border: 2px solid $principalcolor;
+  border-radius: $border-radius;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $principalcolor;
+    color: white;
+    text-decoration: none;
   }
 }

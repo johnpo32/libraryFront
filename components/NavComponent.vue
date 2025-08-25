@@ -1,20 +1,14 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light">
-        <!-- Menú colapsable -->
-        <div class="collapse navbar-collapse" id="navbarContent">
-
-          <!-- Acciones de usuario -->
-          <div class="d-flex gap-2">
-            <NuxtLink to="/" class="botonInicio btn btn-outline-primary">
-              Inicio
-            </NuxtLink>
-            <div class="d-flex gap-2">
-              <NuxtLink to="/biblioteca" class="botonBiblioteca btn btn-outline-primary">Biblioteca</NuxtLink>
-              <button class="botonSalir btn btn-outline-secondary" @click="salir">Salir</button>
-            </div>
-          </div>
-        </div>
-      </nav>
+  <!-- Acciones de usuario -->
+  <div>
+    <NuxtLink to="/" class="btn-ver-detalle  botonInicio">
+      Inicio
+    </NuxtLink>
+    <div>
+      <NuxtLink to="/biblioteca" class="btn-ver-detalle botonBiblioteca">Biblioteca</NuxtLink>
+      <span class="btn-ver-detalle  botonSalir " @click="salir">Salir</span>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -36,29 +30,27 @@ const salir = () => {
   });
   auth.logout()
 }
-
-const irABiblioteca = () => {
-  router.push('/biblioteca')
-}
-
-const inicio = () => {
-  router.push('/')
-}
 </script>
 
 <style lang="scss">
 .botonInicio {
   position: fixed;
   right: 220px;
+  width: auto;
+  padding: .5em;
 }
 
 .botonSalir {
   position: fixed;
   right: 20px;
+  width: auto;
+  padding: .5em;
 }
 
 .botonBiblioteca {
   position: fixed;
   right: 100px;
+  width: auto;
+  padding: .5em;
 }
 </style>

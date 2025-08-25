@@ -24,12 +24,11 @@
     <!-- Lista de libros -->
 
     <div v-if="loading" class="results-section">
-      <span class="spinner-border spinner-border-sm" role="status"></span>
       Cargando...
     </div>
 
-    <div v-else class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      <div v-for="book in bookBiblioteca.biblioteca" :key="book.key" class="col book-card">
+    <div v-else class="grilla">
+      <div v-for="book in bookBiblioteca.biblioteca" :key="book.key" >
         <CardComponent :libro="book" />
       </div>
     </div>

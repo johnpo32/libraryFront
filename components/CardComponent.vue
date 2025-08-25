@@ -141,25 +141,4 @@ const props = defineProps({
   padding-top: 0.5rem;
 }
 
-.btn-ver-detalle {
-  display: block;
-  width: 90%;
-  padding: 0.75rem;
-  background: transparent;
-  color: $principalcolor;
-  border: 2px solid $principalcolor;
-  border-radius: $border-radius;
-  text-decoration: none;
-  text-align: center;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-
-  &:hover {
-    background: $principalcolor;
-    color: white;
-    text-decoration: none;
-  }
-}
-
 </style>

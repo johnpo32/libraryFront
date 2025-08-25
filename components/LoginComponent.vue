@@ -1,10 +1,9 @@
 <template>
   <!-- Loading -->
-  <div v-if="loading" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-  </div>
+  <span class="login-container" v-if="loading">
+    Cargando...
+  </span>
+
   <!-- resto del contenido -->
   <div v-else class="login-container">
     <div class="login-card">
