@@ -39,6 +39,7 @@
 <script setup>
 /* Store */
 import { useAuthStore } from '~/stores/auth'
+import { useBooksStore } from '~/stores/books'
 
 const message = ref('')
 const username = ref('')
@@ -47,8 +48,11 @@ const loading = ref(false)
 const isLoginMode = ref(true)
 const { $register } = useNuxtApp()
 
-/* Plugins */
+/* Store */
 const auth = useAuthStore()
+const booksStore = useBooksStore()
+
+/* Plugins */
 const { $swal } = useNuxtApp();
 
 /* puedo inciar sesion o registrar */
@@ -75,6 +79,7 @@ const loginUser = async () => {
     notificar("success", consulta.message)
 
     loading.value = false
+    booksStore.setResults([])
     navigateTo('/')
 
   } else {
