@@ -1,42 +1,47 @@
 <template>
-  <div class="card moto-card h-100 shadow-sm border-0">
+  <div class="book-card">
 
-    <!-- Imagen principal -->
-    <div class="image-container">
-      <NuxtLink :to="`/libros/${libro.key}`" class="text-decoration-none">
-        <img :src="libro.cover || libro.coverImage || '/images/sin-imagen.png'" class="moto-image"
-          :alt="`${libro.title}`" loading="lazy" />
+    <!-- Imagen -->
+    <div class="book-image">
+      <NuxtLink :to="`/libros/${libro.key}`">
+        <img 
+          :src="libro.cover || libro.coverImage || '/images/sin-imagen.png'" 
+          :alt="libro.title" 
+          loading="lazy" 
+        />
       </NuxtLink>
     </div>
 
-    <div class="card-body d-flex flex-column">
+    <div class="book-content">
       <!-- Titulo -->
-      <h3 class="h5 card-title text-truncate">
+      <h3 class="book-title">
         {{ libro.title }}
       </h3>
 
-      <!-- Seccion solo para la biblioteca -->
-      <div v-if="libro.coverImage" class="card-body">
-  <!-- Metadatos -->
-  <ul class="list-unstyled d-flex flex-wrap gap-3 mb-2">
-    <li><small class="text-muted"><strong>Autor:</strong> {{ libro.author || '-' }}</small></li>
-    <li><small class="text-muted"><strong>Año:</strong> {{ libro.publishYear || '-' }}</small></li>
-    <li>
-      <small class="text-muted">
-        <strong>Calificación:</strong> {{ libro.rating ? libro.rating + '/5' : '-' }}
-      </small>
-    </li>
-  </ul>
+      <!-- verifico si vengo de la biblioteca-->
+      <div v-if="libro.coverImage">
 
-  <!-- Reseña -->
-  <div class="review text-muted">
-    <small><strong>Reseña:</strong> {{ libro.review || 'Sin reseña disponible.' }}</small>
-  </div>
-</div>
+        <div class="seccion-libro">
+          <span class="libro-item">
+            <strong>Autor:</strong> {{ libro.author || '-' }}
+          </span>
+          <span class="libro-item">
+            <strong>Año:</strong> {{ libro.publishYear || '-' }}
+          </span>
+          <span class="libro-item">
+            <strong>Calificación:</strong> {{ libro.rating ? libro.rating + '/5' : '-' }}
+          </span>
+        </div>
+
+        <!-- Reseña -->
+        <div class="libro-review">
+          <strong>Reseña:</strong> {{ libro.review || 'Sin reseña disponible.' }}
+        </div>
+      </div>
 
       <!-- Botón de acción -->
-      <div class="card-footer bg-transparent border-0 pt-0">
-        <NuxtLink :to="`/libros/${libro.key}`" class="btn btn-outline-primary w-100">
+      <div class="book-actions">
+        <NuxtLink :to="`/libros/${libro.key}`" class="btn-ver-detalle">
           Ver detalles
         </NuxtLink>
       </div>
@@ -51,28 +56,110 @@ const props = defineProps({
     required: false
   }
 })
-
 </script>
 
-<style>
-.image-container {
+<style scoped lang="scss">
+
+.book-card {
+  background: $background-color;
+  border-radius: $border-radius;
+  box-shadow: $color-shadow;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-image {
   width: 100%;
   height: 200px;
   display: flex;
   align-items: center;
-  /* centra verticalmente */
   justify-content: center;
-  /* centra horizontalmente */
   overflow: hidden;
-  position: relative;
+  background: #f8f9fa;
+  object-fit: contain;
 }
 
-.review {
-  max-height: 100px;  
-  overflow: hidden; 
+.book-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.book-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-color;
+  margin: 0;
+  line-height: 1.3;
+  
+  overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4; 
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+.seccion-libro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libro-item {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+
+  strong {
+    color: $text-color;
+    font-weight: 500;
+  }
+}
+
+.libro-review {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+    overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  
+  strong {
+    color: $text-color;
+    font-weight: 500;
+  }
+}
+
+.book-actions {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.btn-ver-detalle {
+  display: block;
+  width: 90%;
+  padding: 0.75rem;
+  background: transparent;
+  color: $principalcolor;
+  border: 2px solid $principalcolor;
+  border-radius: $border-radius;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $principalcolor;
+    color: white;
+    text-decoration: none;
+  }
+}
+
 </style>
